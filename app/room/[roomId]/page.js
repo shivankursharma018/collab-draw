@@ -2,57 +2,6 @@
 
 import React, { useEffect, useRef, useState, useCallback } from 'react'
 import { io } from 'socket.io-client'
-import { useEffect, useRef } from 'react';
-import { useRouter } from 'next/router';
-import { fabric } from 'fabric';
-
-export default function RoomPage() {
-    const canvasRef = useRef(null);
-    const socketRef = useRef(null);
-    const router = useRouter();
-    const { roomId } = router.query;
-
-    useEffect(() => {
-        if (!roomId) return;
-
-        // Initialize socket connection
-        socketRef.current = io('http://localhost:4000', {
-            query: { roomId },
-        });
-
-        // Initialize canvas
-        const canvas = new fabric.Canvas(canvasRef.current, {
-            isDrawingMode: true,
-        });
-
-        // Broadcast drawing events
-        canvas.on('mouse:up', () => {
-            const data = canvas.toJSON();
-            socketRef.current.emit('drawing', data);
-        });
-
-        // Receive drawing events
-        socketRef.current.on('drawing', (data) => {
-            canvas.loadFromJSON(data);
-            canvas.renderAll();
-        });
-
-        return () => {
-            socketRef.current.disconnect();
-        };
-    }, [roomId]);
-
-    return (
-        <div>
-            <h2>Room: {roomId}</h2>
-            <canvas ref={canvasRef} width="800" height="600"></canvas>
-        </div>
-    );
-}
-
-
-
-
 
 export default function Room({ params: paramsPromise }) {
   const params = React.use(paramsPromise)
