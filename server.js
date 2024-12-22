@@ -18,21 +18,23 @@ nextApp.prepare().then(() => {
   })
 
   io.on('connection', (socket) => {
-    console.log('A user connected')
+    console.log('A user connected:', socket.id)
 
     socket.on('joinRoom', (roomId) => {
       socket.join(roomId)
-      console.log(`User joined room: ${roomId}`)
+      console.log(`User ${socket.id} joined room: ${roomId}`)
+      // Notify the client that they've successfully joined the room
+      socket.emit('roomJoined', roomId)
     })
 
     socket.on('drawing', (data) => {
-      console.log(`Drawing event received in room: ${data.roomId}`)
-      // Broadcast the drawing data to all clients in the room, except the sender
-      socket.to(data.roomId).emit('drawing', data)
+      console.log(`Drawing event received in room ${data.roomId} from user ${socket.id}`)
+      // Broadcast to all clients in the room, including the sender
+      io.in(data.roomId).emit('drawing', data)
     })
 
     socket.on('disconnect', () => {
-      console.log('A user disconnected')
+      console.log('A user disconnected:', socket.id)
     })
   })
 
