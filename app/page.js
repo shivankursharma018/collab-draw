@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="p-8 bg-white rounded-lg shadow-md">
-        <h1 className="mb-6 text-3xl font-bold text-center">Realtime Whiteboard</h1>
+        <h1 className="mb-6 text-3xl text-zinc-700 font-bold text-center">Realtime Whiteboard</h1>
         <div className="space-y-4">
           <button
             onClick={handleCreateRoom}
