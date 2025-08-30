@@ -1,24 +1,23 @@
-# Use an official Node runtime as the parent image
-FROM node:14
 
-# Set the working directory in the container
+# Use Node.js 18 LTS
+FROM node:18
+
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json
+# Copy package files first for better caching
 COPY package*.json ./
 
-# Install dependencies
 RUN npm install
 
-# Copy the rest of the application code
+# Copy all source files
 COPY . .
 
-# Build the Next.js application
+# Build Next.js (creates .next/ for production)
 RUN npm run build
 
-# Expose the port the app runs on
+# Expose app port
 EXPOSE 3000
 
-# Define the command to run the app
-CMD ["node", "server.js"]
+# Run custom server (with Next.js + Socket.IO)
+CMD ["npm", "start"]
 
